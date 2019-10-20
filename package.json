@@ -1,0 +1,15 @@
+{
+  "name": "redchan",
+  "version": "1.0.0",
+  "description": "reddit but good",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "banningcalvin",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "firebase": "^7.2.1"
+  }
+}
