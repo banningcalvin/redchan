@@ -46,3 +46,18 @@ body
 .boardList li {
     margin: 10 0 0 0;
 }
+.thread {
+    border: none;
+    border-bottom: 1px solid #b7c5d9;
+}
+.threadTitle {
+    color: #0f0c5d;
+    font-weight: 700;
+}
+.username {
+    font-weight: 700;
+    color: #117743;
+}
+li {
+/*    list-style: none;*/
+}
