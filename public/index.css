@@ -19,7 +19,7 @@ body
     border: none;
     border-bottom: 1px solid #b7c5d9;
     width: fit-content;
-    margin: auto;
+    margin: 10px auto;
 }
 
 .boardTitle {
@@ -58,6 +58,13 @@ body
     font-weight: 700;
     color: #117743;
 }
-li {
-/*    list-style: none;*/
+.splash {
+display: block;
+    margin: auto;
+}
+.copyright {
+    font-size: 11px;
+    text-align: center;
+    margin-top: 4em;
+    margin-bottom: 1em;
 }

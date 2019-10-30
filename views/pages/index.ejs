@@ -8,11 +8,11 @@
 <body>
     <% include ../partials/nav.ejs %>
 
-    <img class="splash" src="">
     <div class="boardTitle divider">redchan</div>
+    <img class="splash" src="/image/logo.png">
     <br>
     <div class="center">
-        <h2>boards</h2>
+        <h2 class="divider">boards</h2>
         <ul class="boardList">
             <li>
                 <a href="/board/a/" title="all">all</a>
@@ -21,7 +21,12 @@
                 <a href="/board/up/" title="updates">updates</a>
             </li>
         </ul>
+        <h2 class="divider">notice</h2>
+        <p>don't hack this site - management</p>
     </div>
+
+    <% include ../partials/copyright %>
+
     <script src="/index.js"></script>
 </body>
 

@@ -44,5 +44,9 @@ app.get("/board/:board", function(req, res){
     });
 });
 
+app.get('/*', function(req, res) {
+    res.send('lol 404 not found kiddo');
+});
+
 
 app.listen(3000, "localhost")
