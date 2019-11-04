@@ -33,7 +33,7 @@ body
     color: #af0a0f;
 }
 
-.center {
+.center, .center * {
     text-align: center;
     margin: auto;
 }
