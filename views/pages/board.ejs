@@ -20,7 +20,7 @@
     <% if (posts && posts.length) { %>
     <% posts.forEach(function(post) { %>
     <div class="thread">
-        <span class="threadTitle"><%= post.title %></span> <span class="username"><%= post.user %></span>
+        <span class="threadVotes"><%= post.votes %></span> - <span class="threadTitle"><%= post.title %></span> <span class="username"><%= post.user %></span>
         <p><%= post.content%></p>
         <% if (post.replies && post.replies.length) { %>
             <ul>

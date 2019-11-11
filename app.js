@@ -46,7 +46,7 @@ app.get('/logout', function (req, res) {
 //go to a specific board
 app.get("/board/:board", function (req, res) {
     firebase.database().ref('/board/' + req.params.board).once('value').then(function (snapshot) {
-        console.log(snapshot.val())
+        //console.log(snapshot.val())
         //res.send(`get /board/${req.params.board} ${snapshot.val()}`);
         let data = snapshot.val()
         res.render('pages/board', {
@@ -58,8 +58,8 @@ app.get("/board/:board", function (req, res) {
 });
 
 app.get('/*', function (req, res) {
-    res.send('lol 404 not found kiddo');
+    res.render('pages/404');
 });
 
 
-app.listen(3000, "localhost")
+app.listen(port, "localhost")
