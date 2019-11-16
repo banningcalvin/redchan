@@ -1,11 +1,13 @@
-<span class="threadVotes"><%= reply.votes %></span> - <span class="username"><%= reply.user %></span>
-<p><%= reply.content %></p>
-<% if (reply.replies && reply.replies.length) { %>
+<div class="reply">
+    <span class="username"><%= reply.user %></span> - <button class="replyButton">Reply</button>
+    <p><%= reply.content %></p>
+    <% if (reply.replies && reply.replies.length) { %>
     <ul>
-    <% reply.replies.forEach(function(reply) { %>
-        <li>
+        <% reply.replies.forEach(function(reply) { %>
+        <li style="list-style: none;">
             <%- include('../partials/reply', {reply: reply}); %>
         </li>
-    <% }); %>
+        <% }); %>
     </ul>
-<% }; %>
+    <% }; %>
+</div>

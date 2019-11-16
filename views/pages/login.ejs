@@ -13,65 +13,43 @@
     <br>
 
     <div class="center g-signin2" data-onsuccess="onSignIn"></div>
-    
+
     <div id="account"></div>
     <div class="center" style="margin:10px">
-    <button id="btnLogout" onclick="signOut();">Logout</button>
-      </div>
-
-    <script>
-        /*******************************************************/
-        var firebaseConfig = {
-            apiKey: "AIzaSyC5A4oZaEJBNyzJdSvX_ST2_pI_-4bXOP4",
-            authDomain: "redchan-8d5ab.firebaseapp.com",
-            databaseURL: "https://redchan-8d5ab.firebaseio.com",
-            projectId: "redchan-8d5ab",
-            storageBucket: "redchan-8d5ab.appspot.com",
-            messagingSenderId: "575273642415",
-            appId: "1:575273642415:web:95ab486312aa6eb4b5e75a"
-        };
-        // Initialize Firebase
-        var fb = firebase.initializeApp(firebaseConfig);
-        var database = firebase.database();
-        /*******************************************************/
-
-        function onSignIn(googleUser) {
-            var profile = googleUser.getBasicProfile();
-            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-            console.log('Name: ' + profile.getName());
-            console.log('Image URL: ' + profile.getImageUrl());
-            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-
-            console.log('Google Auth Response', googleUser);
-            // We need to register an Observer on Firebase Auth to make sure auth is initialized.
-            var unsubscribe = firebase.auth().onAuthStateChanged(function (firebaseUser) {
-                unsubscribe();
-                // Check if we are already signed-in Firebase with the correct user.
-                if (!isUserEqual(googleUser, firebaseUser)) {
-                    console.log("already signed in ~~~~~~~~~")
-                    // Build Firebase credential with the Google ID token.
-                    var credential = firebase.auth.GoogleAuthProvider.credential(
-                        googleUser.getAuthResponse().id_token);
-                    // Sign in with credential from the Google user.
-                    firebase.auth().signInWithCredential(credential).catch(function (error) {
-                        // Handle Errors here.
-                        var errorCode = error.code;
-                        var errorMessage = error.message;
-                        // The email of the user's account used.
-                        var email = error.email;
-                        // The firebase.auth.AuthCredential type that was used.
-                        var credential = error.credential;
-                        // ...
+        <button id="btnLogout" onclick="signOut();">Logout</button>
+        <script>
+            function onSignIn(googleUser) {
+                /* vvv THIS is the sweet stuff vvv */
+                // thank god someone thought of doing something as convoluted as I did
+                // and decided to write documentation on it:
+                // https://firebase.google.com/docs/auth/web/google-signin#advanced:-authenticate-with-firebase-in-node.js
+                var id_token = googleUser.getAuthResponse().id_token
+                console.log(id_token);
+                // send it to the server
+                fetch("/login", {
+                    method: "POST",
+                    body: JSON.stringify({ token: id_token }),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    }
+                })
+                    .then(response => response.text())
+                    .then(result => {
+                        document.getElementById('loginNotice').innerText = ("Logged in as: " + JSON.parse(result).userEmail)
                     });
-                } else {
-                    console.log('User already signed-in Firebase.');
-                }
-            });
-        }
+            }
+        </script>
+    </div>
+    <script>
         function signOut() {
             var auth2 = gapi.auth2.getAuthInstance();
             auth2.signOut().then(function () {
                 console.log('User signed out.');
+                fetch("/logout", {
+                    method: "POST",
+                })
+                .then(console.log("logout sent"));
             });
         }
     </script>

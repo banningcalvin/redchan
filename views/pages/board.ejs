@@ -16,17 +16,23 @@
         <%= description%>
     </div>
     <br>
+    <div class="center">
+        <a href="#">
+        Create new thread
+        </a>
+    </div>
+    <br>
 
     <% if (posts && posts.length) { %>
     <% posts.forEach(function(post) { %>
     <div class="thread">
         <span class="threadVotes"><%= post.votes %></span> - <span class="threadTitle"><%= post.title %></span> <span
-            class="username"><%= post.user %></span>
+            class="username"><%= post.user %></span> - <button class="replyButton">Reply</button>
         <p><%= post.content%></p>
         <% if (post.replies && post.replies.length) { %>
         <ul>
             <% post.replies.forEach(function(reply) { %>
-            <li>
+            <li style="list-style: none;">
                 <% include ../partials/reply %>
             </li>
             <% }); %>

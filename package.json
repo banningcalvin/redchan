@@ -4,14 +4,16 @@
   "description": "reddit but good",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "banningcalvin",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "ejs": "^2.7.1",
     "express": "^4.17.1",
-    "firebase": "^7.2.1"
+    "firebase": "^7.2.1",
+    "nodemon": "^1.19.4"
   }
 }

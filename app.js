@@ -2,12 +2,15 @@ const express = require('express');
 const http = require('http')
 const app = express();
 const firebase = require('firebase')
+const bodyParser = require('body-parser');
 const port = 3000;
 
 var server = http.createServer(app);
 
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 var firebaseConfig = {
     apiKey: "AIzaSyC5A4oZaEJBNyzJdSvX_ST2_pI_-4bXOP4",
@@ -25,22 +28,13 @@ var database = firebase.database();
 //homepage
 app.get('/', function (req, res) {
     res.render('pages/index');
+
+
 });
 
 //loginpage
 app.get('/login', function (req, res) {
     res.render('pages/login');
-});
-
-//logout
-app.get('/logout', function (req, res) {
-    function signOut() {
-        var auth2 = gapi.auth2.getAuthInstance();
-        auth2.signOut().then(function () {
-            console.log('User signed out.');
-        });
-    }
-    signOut();
 });
 
 //go to a specific board
@@ -61,5 +55,32 @@ app.get('/*', function (req, res) {
     res.render('pages/404');
 });
 
+
+/*****************************************************************************/
+
+//set the api token for auth
+app.post('/login', function(req,res) {
+    if(req.body.token) {
+        var credential = firebase.auth.GoogleAuthProvider.credential(req.body.token);
+        firebase.auth().signInWithCredential(credential).catch(function(error) {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            var errorEmail = error.email;
+            var errorCredential = error.credential;
+            console.log("Error encountered line 80: " + errorCode + errorEmail + errorMessage + errorCredential);
+        }).then(
+            console.log("user logged in: " + firebase.auth().currentUser.email)
+        );
+
+        res.json({tokenReceived:true, userEmail: firebase.auth().currentUser.email})
+    } else {
+        res.json({tokenReceived:false})
+    }
+});
+
+//logout
+app.post('/logout', function (req, res) {
+
+});
 
 app.listen(port, "localhost")
