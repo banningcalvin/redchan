@@ -10,6 +10,49 @@ $(function () {
     };
 
     var fb = firebase.initializeApp(firebaseConfig);
-    //export const auth = firebase.auth
-    //var db = firebase.database();
+
+    function getCookie(name) {
+        var re = new RegExp(name + "=([^;]+)");
+        var value = re.exec(document.cookie);
+        return (value != null) ? unescape(value[1]) : null;
+    }
+
+    function authenticate() {
+        firebase.auth().currentUser.getIdToken(true)
+            .then(function (idToken) {
+                //write this token to a cookie so that we can reuse it later
+                document.cookie = "token=" + idToken + ";path=/"
+            })
+            .catch(function (error) {
+                console.log("error getting id token")
+            });
+        //getCookie("token")
+        fetch("/login", {
+            method: "POST",
+            body: JSON.stringify({ token: getCookie("token") }),
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        })
+            .then(response => response.text())
+            .then(result => {
+                document.getElementById('loginNotice').innerText = ("Logged in as: " + JSON.parse(result)["userEmail"])
+                //console.log(result)
+                //alert("Logged in as: " + JSON.parse(result).userEmail + "!")
+            });
+    }
+
+    //detect initial auth state
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            console.log("User logged in, running authenticate()");
+            setTimeout(authenticate, 1000);
+
+            //authenticate();
+        } else {
+            console.log('user not signed (onAuthStateChanged)');
+        }
+    });
+    
 });

@@ -95,3 +95,6 @@ display: block;
     border-width: 3px;
     margin:0px;
 }
+.hidden {
+    display: none;
+}

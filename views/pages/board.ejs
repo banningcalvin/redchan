@@ -7,6 +7,7 @@
 
 <body>
     <% include ../partials/nav %>
+    <div class="center g-signin2" data-onsuccess="onSignIn"></div>
 
     <img class="splash" src="">
     <div class="boardTitle divider">
@@ -16,12 +17,40 @@
         <%= description%>
     </div>
     <br>
-    <div class="center">
-        <a href="#">
-        Create new thread
-        </a>
+    <div class="center divider" style="width:100%;">
+
+        <h2 id="startThread">[<a href="#" onclick="swap()">Click to Start a New Thread</a>]</h2>
+        <script>
+                //swap hidden class on thread creator and newthread form
+                function swap() {
+                    $('#newThread').toggleClass('hidden');
+                    $('#startThread').toggleClass('hidden');
+                }
+                
+            </script>
+        <form id="newThread" action="/newThread" class="reply hidden" style="padding:10px">
+            <h6 style="float:right;"><a href="#" onclick="swap()">Hide this Prompt</a></h6>
+            <br />
+            <label>
+                Title:
+                <br />
+                <input type="text" name="title" />
+            </label>
+            <br />
+            <br />
+            <label>
+                Post Content:
+                <br />
+                <textarea style="text-align: left;" rows="6" cols="30" name="content"></textarea>
+            </label>
+            <br />
+            <br />
+            <input type="submit" name="submit" />
+        </form>
+        <br />
     </div>
-    <br>
+    <br />
+    <br />
 
     <% if (posts && posts.length) { %>
     <% posts.forEach(function(post) { %>

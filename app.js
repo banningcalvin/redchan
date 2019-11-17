@@ -28,8 +28,6 @@ var database = firebase.database();
 //homepage
 app.get('/', function (req, res) {
     res.render('pages/index');
-
-
 });
 
 //loginpage
@@ -40,8 +38,6 @@ app.get('/login', function (req, res) {
 //go to a specific board
 app.get("/board/:board", function (req, res) {
     firebase.database().ref('/board/' + req.params.board).once('value').then(function (snapshot) {
-        //console.log(snapshot.val())
-        //res.send(`get /board/${req.params.board} ${snapshot.val()}`);
         let data = snapshot.val()
         res.render('pages/board', {
             title: "/" + req.params.board + "/ - " + data.title,
@@ -52,6 +48,11 @@ app.get("/board/:board", function (req, res) {
 });
 
 app.get('/*', function (req, res) {
+    // We use this code to figure out whether or not the user is actually logged in
+    if (credential) {
+        firebase.auth().signInWithCredential(credential)
+    }
+
     res.render('pages/404');
 });
 
@@ -59,28 +60,28 @@ app.get('/*', function (req, res) {
 /*****************************************************************************/
 
 //set the api token for auth
-app.post('/login', function(req,res) {
-    if(req.body.token) {
+app.post('/login', function (req, res) {
+    if (req.body.token) {
         var credential = firebase.auth.GoogleAuthProvider.credential(req.body.token);
-        firebase.auth().signInWithCredential(credential).catch(function(error) {
+        firebase.auth().signInWithCredential(credential).catch(function (error) {
             var errorCode = error.code;
             var errorMessage = error.message;
             var errorEmail = error.email;
             var errorCredential = error.credential;
-            console.log("Error encountered line 80: " + errorCode + errorEmail + errorMessage + errorCredential);
+            console.log("Error encountered line 88: " + errorCode + errorEmail + errorMessage + errorCredential);
         }).then(
             console.log("user logged in: " + firebase.auth().currentUser.email)
         );
 
-        res.json({tokenReceived:true, userEmail: firebase.auth().currentUser.email})
+        res.json({ tokenReceived: true, userEmail: firebase.auth().currentUser.email })
     } else {
-        res.json({tokenReceived:false})
+        res.json({ tokenReceived: false })
     }
 });
 
-//logout
+//logout function, 
 app.post('/logout', function (req, res) {
-
+    firebase.auth().signOut;
 });
 
 app.listen(port, "localhost")

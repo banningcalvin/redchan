@@ -10,6 +10,7 @@
 
     <img class="splash" src="">
     <div class="boardTitle divider">login</div>
+    <div class="center">Anyone with a google account can login and contribute!</div>
     <br>
 
     <div class="center g-signin2" data-onsuccess="onSignIn"></div>
@@ -24,7 +25,9 @@
                 // and decided to write documentation on it:
                 // https://firebase.google.com/docs/auth/web/google-signin#advanced:-authenticate-with-firebase-in-node.js
                 var id_token = googleUser.getAuthResponse().id_token
-                console.log(id_token);
+                //write this token to a cookie so that we can reuse it later
+                document.cookie = "token=" + id_token + ";path=/"
+
                 // send it to the server
                 fetch("/login", {
                     method: "POST",
@@ -36,20 +39,23 @@
                 })
                     .then(response => response.text())
                     .then(result => {
-                        document.getElementById('loginNotice').innerText = ("Logged in as: " + JSON.parse(result).userEmail)
+                        //document.getElementById('loginNotice').innerText = ("Logged in as: " + JSON.parse(result).userEmail)
+                        //alert("Logged in as: " + JSON.parse(result).userEmail + "!")
+                        
                     });
             }
         </script>
     </div>
     <script>
         function signOut() {
+
             var auth2 = gapi.auth2.getAuthInstance();
             auth2.signOut().then(function () {
                 console.log('User signed out.');
                 fetch("/logout", {
                     method: "POST",
                 })
-                .then(console.log("logout sent"));
+                    .then(console.log("logout sent"));
             });
         }
     </script>
