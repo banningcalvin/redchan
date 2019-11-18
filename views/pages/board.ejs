@@ -117,20 +117,15 @@
     <% sortable.forEach(function(post) { %>
 
     <script>
-        function vote(path, upvote) {
-            if(upvote) { // user is upvoting bad content because they hate fun
-                console.log("upvote: /board/" + '<%= board %>' + "/posts/" + path)
-            }else { // user is downvoting good content because they hate fun
-                console.log("downvote: /board/" + '<%= board %>' + "/posts/" + path)
-            }
-        }
+        //see index.js. This is a placeholder
+        var vote = function(){};
     </script>
 
     <div class="thread">
         <span class="threadTitle"><%= post.title %></span> <span class="username"><%= post.user %></span>
         -
         <button class="replyButton" onclick="swapReply('<%= post.id %>')">Reply</button>
-        <button onclick="vote('<%= post.id %>', false);" class="upvoteButton">-</button> <span>Votes: <%= post.votes %></span> <button onclick="vote('<%= post.id %>', true);" class="upvoteButton">+</button>
+        <button onclick="vote('<%= board %>', '<%= post.id %>', false);" class="upvoteButton">-</button> <span>Votes: <%= post.votes %></span> <button onclick="vote('<%= board %>', '<%= post.id %>', true);" class="upvoteButton">+</button>
         <p><%= post.content%></p>
         <% if (post.replies) { %>
         <ul>

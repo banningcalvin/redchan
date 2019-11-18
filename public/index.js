@@ -56,4 +56,25 @@ $(function () {
         }
     });
 
+    // vote function
+    vote = function (board, path, upvote) {
+        let db = firebase.database().ref('board').child(board).child('posts').child(path).child('votes');
+        if(upvote) { // user is upvoting bad content because they hate fun
+            db.transaction((votes) => {
+                if(votes) {
+                    votes = votes + 1
+                }
+                //votes[firebase.auth().currentUser.uid] = 1
+                return votes
+            })
+        }else { // user is downvoting good content because they hate fun
+            db.transaction((votes) => {
+                //votes[firebase.auth().currentUser.uid] = -1
+                if(votes) {
+                    votes = votes - 1
+                }
+                return votes
+            })
+        }
+    }
 });
