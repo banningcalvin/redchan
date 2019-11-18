@@ -1,4 +1,10 @@
-# reddit clone but without the silly reddit stuff
+# Redchan - Group 15
+- reddit clone but without the silly reddit stuff
+## Before you run
+- If you're hosting the site, you will need to sign out and sign back in fully when you start or restart the app due to how google oAuth is handled, otherwise the app will not accept your credentials
+- I am not responsible for content posted to the database
+- There is no hosted version because of the unique architecture.
+  - Please clone and run the express server instead.
 ## How to Run
 ```
 git clone https://github.com/banningcalvin/redchan`

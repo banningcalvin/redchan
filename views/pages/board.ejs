@@ -114,10 +114,17 @@
         });
     } %>
     <% sortable.forEach(function(post) { %>
+
+    <script>
+        function upvote(path) {
+            console.log('upvote')
+        }
+    </script>
+
     <div class="thread">
         <span class="threadTitle"><%= post.title %></span> <span class="username"><%= post.user %></span>
         -
-        <button class="replyButton" onclick="swapReply('<%= p %>');">Reply</button>
+        <button class="replyButton" onclick="upvote('<%=  %>');">Reply</button>
         - <span>Votes: <%= post.votes %></span> <button class="upvoteButton">+</button>
         <p><%= post.content%></p>
         <% if (post.replies) { %>
