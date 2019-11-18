@@ -96,9 +96,10 @@
     <br />
 
     <% if (posts) { %>
-    <% for(var p in posts) {
-        var sortable = [];
-        for (var p in posts) {
+    <% 
+    var sortable = [];
+    for(var p in posts) {
+    
             sortable.push({
                 id: p,
                 title: posts[p].title,
@@ -107,25 +108,25 @@
                 content: posts[p].content,
                 replies: posts[p].replies
             });
-        }
-
-        sortable.sort(function(a, b) {
-            return b.votes - a.votes;
-        });
-    } %>
+    }
+    
+    sortable.sort(function(a, b) {
+        return b.votes - a.votes;
+    });
+    %>
     <% sortable.forEach(function(post) { %>
 
     <script>
-        function upvote(path) {
-            console.log('upvote')
+        function vote(path, upvote) {
+            console.log('upvote?' + upvote + ': ' + path)
         }
     </script>
 
     <div class="thread">
         <span class="threadTitle"><%= post.title %></span> <span class="username"><%= post.user %></span>
         -
-        <button class="replyButton" onclick="swapReply()">Reply</button>
-        - <span>Votes: <%= post.votes %></span> <button onclick="upvote('<%=  %>');" class="upvoteButton">+</button>
+        <button class="replyButton" onclick="swapReply('<%= post.id %>')">Reply</button>
+        <button onclick="vote('<%= post.id %>', false);" class="upvoteButton">-</button> <span>Votes: <%= post.votes %></span> <button onclick="vote('<%= post.id %>', true);" class="upvoteButton">+</button>
         <p><%= post.content%></p>
         <% if (post.replies) { %>
         <ul>
