@@ -11,8 +11,8 @@
 
     <div id="replyBox" class="hidden">
         <div style="background-color: #c9cde8;padding: 5px;">
-            <strong>Reply</strong> - <a href="/login">You must be logged in!</a><button class="replyButton" onclick="swapReply()"
-                style="float: right;margin: -2px -2px 0px 0px;">X</button>
+            <strong>Reply</strong> - <a href="/login">You must be logged in!</a><button class="replyButton"
+                onclick="swapReply()" style="float: right;margin: -2px -2px 0px 0px;">X</button>
         </div>
         <form id="newReply" action="/newReply" method="POST" style="padding:10px">
             <label>
@@ -88,7 +88,7 @@
             <a href="/login">You must be logged in to post!</a>
             <br />
             <br />
-            <input type="submit" name="submit" />
+            <input type="submit" name="submit" value="Post" />
         </form>
         <br />
     </div>
@@ -96,24 +96,47 @@
     <br />
 
     <% if (posts) { %>
-    <% for (const post in posts) { %>
+    <% for(var p in posts) {
+        var sortable = [];
+        for (var p in posts) {
+            sortable.push({
+                id: p,
+                title: posts[p].title,
+                user: posts[p].user,
+                votes: posts[p].votes,
+                content: posts[p].content,
+                replies: posts[p].replies
+            });
+        }
+
+        sortable.sort(function(a, b) {
+            return b.votes - a.votes;
+        });
+    } %>
+    <% sortable.forEach(function(post) { %>
     <div class="thread">
-        <span class="threadVotes"><%= posts[post].votes %></span> - <span
-            class="threadTitle"><%= posts[post].title %></span> <span class="username"><%= posts[post].user %></span> -
-        <button class="replyButton" onclick="swapReply('<%= post %>');">Reply</button>
-        <p><%= posts[post].content%></p>
-        <% if (posts[post].replies) { %>
+        <span class="threadTitle"><%= post.title %></span> <span class="username"><%= post.user %></span>
+        -
+        <button class="replyButton" onclick="swapReply('<%= p %>');">Reply</button>
+        - <span>Votes: <%= post.votes %></span> <button class="upvoteButton">+</button>
+        <p><%= post.content%></p>
+        <% if (post.replies) { %>
         <ul>
-            <% for (const reply in posts[post].replies) { %>
+            <% for (const reply in post.replies) { %>
             <li style="list-style: none;">
-                <%- include('../partials/reply', {user: posts[post].replies[reply].user, content: posts[post].replies[reply].content, replies: posts[post].replies[reply].replies, post: post, depth: 2}) %>
+                <%- include('../partials/reply', {user: post.replies[reply].user, content: post.replies[reply].content, replies: post.replies[reply].replies, votes: post.replies[reply].votes, post: post, depth: 2}) %>
             </li>
             <% }; %>
         </ul>
         <% }; %>
     </div>
+    <% }); %>
     <% }; %>
-    <% }; %>
+    <% if (!posts){ %>
+    <h3 class="center">It appears that this board is disabled and has no posts.</h3>
+    <p class="center"><i>Note</i>: This is intentional, for testing purposes. Writing to this board has been disabled
+    </p>
+    <% } %>
 
     <% include ../partials/copyright %>
     <script src="/index.js"></script>
