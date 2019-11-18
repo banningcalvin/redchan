@@ -7,7 +7,43 @@
 
 <body>
     <% include ../partials/nav %>
-    <div class="center g-signin2" data-onsuccess="onSignIn"></div>
+
+
+    <div id="replyBox" class="hidden">
+        <div style="background-color: #c9cde8;padding: 5px;">
+            <strong>Reply</strong> - <a href="/login">You must be logged in!</a><button class="replyButton" onclick="swapReply()"
+                style="float: right;margin: -2px -2px 0px 0px;">X</button>
+        </div>
+        <form id="newReply" action="/newReply" method="POST" style="padding:10px">
+            <label>
+                Post Content:
+                <br />
+                <textarea style="resize: none;text-align: left;" rows="4" cols="30" name="content"></textarea>
+            </label>
+            <input type="hidden" name="token" id="replyTokenInput" value="">
+            <input type="hidden" name="board" id="boardInput" value="<%= board %>">
+            <input type="hidden" name="post" id="postInput" value="">
+            <script>
+                //set token value in form to token
+                function getCookie(name) {
+                    var re = new RegExp(name + "=([^;]+)");
+                    var value = re.exec(document.cookie);
+                    return (value != null) ? unescape(value[1]) : null;
+                }
+                $('#replyTokenInput').val(getCookie('token'));
+            </script>
+            <br />
+            <input type="submit" class="replyButton" style="float: right;" name="submit" />
+        </form>
+    </div>
+    <script>
+        function swapReply(postID) {
+            $('#replyBox').toggleClass('hidden');
+            $('#postInput').val(postID)
+        }
+    </script>
+
+    <div class="hidden center g-signin2" data-onsuccess="onSignIn"></div>
 
     <img class="splash" src="">
     <div class="boardTitle divider">
@@ -21,14 +57,14 @@
 
         <h2 id="startThread">[<a href="#" onclick="swap()">Click to Start a New Thread</a>]</h2>
         <script>
-                //swap hidden class on thread creator and newthread form
-                function swap() {
-                    $('#newThread').toggleClass('hidden');
-                    $('#startThread').toggleClass('hidden');
-                }
-                
-            </script>
-        <form id="newThread" action="/newThread" class="reply hidden" style="padding:10px">
+            //swap hidden class on thread creator and newthread form
+            function swap() {
+                $('#newThread').toggleClass('hidden');
+                $('#startThread').toggleClass('hidden');
+            }
+
+        </script>
+        <form id="newThread" action="/newThread" method="POST" class="reply hidden" style="padding:10px">
             <h6 style="float:right;"><a href="#" onclick="swap()">Hide this Prompt</a></h6>
             <br />
             <label>
@@ -43,6 +79,13 @@
                 <br />
                 <textarea style="text-align: left;" rows="6" cols="30" name="content"></textarea>
             </label>
+            <input type="hidden" name="token" id="tokenInput" value="">
+            <input type="hidden" name="board" id="boardInput" value="<%= board %>">
+            <script>
+                $('#tokenInput').val(getCookie('token'));
+            </script>
+            <br />
+            <a href="/login">You must be logged in to post!</a>
             <br />
             <br />
             <input type="submit" name="submit" />
@@ -52,23 +95,24 @@
     <br />
     <br />
 
-    <% if (posts && posts.length) { %>
-    <% posts.forEach(function(post) { %>
+    <% if (posts) { %>
+    <% for (const post in posts) { %>
     <div class="thread">
-        <span class="threadVotes"><%= post.votes %></span> - <span class="threadTitle"><%= post.title %></span> <span
-            class="username"><%= post.user %></span> - <button class="replyButton">Reply</button>
-        <p><%= post.content%></p>
-        <% if (post.replies && post.replies.length) { %>
+        <span class="threadVotes"><%= posts[post].votes %></span> - <span
+            class="threadTitle"><%= posts[post].title %></span> <span class="username"><%= posts[post].user %></span> -
+        <button class="replyButton" onclick="swapReply('<%= post %>');">Reply</button>
+        <p><%= posts[post].content%></p>
+        <% if (posts[post].replies) { %>
         <ul>
-            <% post.replies.forEach(function(reply) { %>
+            <% for (const reply in posts[post].replies) { %>
             <li style="list-style: none;">
-                <% include ../partials/reply %>
+                <%- include('../partials/reply', {user: posts[post].replies[reply].user, content: posts[post].replies[reply].content, replies: posts[post].replies[reply].replies, post: post, depth: 2}) %>
             </li>
-            <% }); %>
+            <% }; %>
         </ul>
         <% }; %>
     </div>
-    <% }); %>
+    <% }; %>
     <% }; %>
 
     <% include ../partials/copyright %>

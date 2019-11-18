@@ -42,20 +42,15 @@ app.get("/board/:board", function (req, res) {
         res.render('pages/board', {
             title: "/" + req.params.board + "/ - " + data.title,
             description: data.description,
-            posts: data.posts
+            posts: data.posts,
+            board: req.params.board
         })
     });
 });
 
 app.get('/*', function (req, res) {
-    // We use this code to figure out whether or not the user is actually logged in
-    if (credential) {
-        firebase.auth().signInWithCredential(credential)
-    }
-
     res.render('pages/404');
 });
-
 
 /*****************************************************************************/
 
@@ -68,9 +63,9 @@ app.post('/login', function (req, res) {
             var errorMessage = error.message;
             var errorEmail = error.email;
             var errorCredential = error.credential;
-            console.log("Error encountered line 88: " + errorCode + errorEmail + errorMessage + errorCredential);
+            console.log("Error encountered line66: " + errorCode); //+ "\n" + errorEmail + "\n" + errorMessage + "\n" + errorCredential);
         }).then(
-            console.log("user logged in: " + firebase.auth().currentUser.email)
+            console.log("current: " + firebase.auth().currentUser.email)
         );
 
         res.json({ tokenReceived: true, userEmail: firebase.auth().currentUser.email })
@@ -81,7 +76,70 @@ app.post('/login', function (req, res) {
 
 //logout function, 
 app.post('/logout', function (req, res) {
-    firebase.auth().signOut;
+    firebase.auth().signOut();
+});
+
+//new threads
+app.post('/newThread', function (req, res) {
+    backURL=req.header('Referer') || '/';
+    //redirect user back
+    res.redirect(backURL);
+
+    //console.log(req.body.title)
+    //console.log(req.body.content)
+    //console.log(req.body.board)
+    //console.log(req.body)
+
+    setTimeout((a) => console.log('timeout')
+        , 3000);
+
+    var credential = firebase.auth.GoogleAuthProvider.credential(req.body.token);
+    firebase.auth().signInWithCredential(credential).catch(function (error) {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        var errorEmail = error.email;
+        var errorCredential = error.credential;
+        console.log("Error newthread: " + errorCode + "\n" + errorEmail + "\n" + errorMessage + "\n" + errorCredential);
+    }).then(
+        firebase.database().ref('board/' + req.body.board +'/posts/').push({
+            title: req.body.title,
+            content: req.body.content,
+            replies: [],
+            user: firebase.auth().currentUser.email,
+            votes: 1
+        })
+    );
+});
+
+//new threads
+app.post('/newReply', function (req, res) {
+    backURL=req.header('Referer') || '/';
+    //redirect user back
+    res.redirect(backURL);
+
+    //console.log(req.body.post)
+    //console.log(req.body.content)
+    //console.log(req.body.board)
+    //console.log(req.body)
+
+    setTimeout((a) => console.log('timeout')
+        , 3000);
+
+    var credential = firebase.auth.GoogleAuthProvider.credential(req.body.token);
+    firebase.auth().signInWithCredential(credential).catch(function (error) {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        var errorEmail = error.email;
+        var errorCredential = error.credential;
+        console.log("Error newreply: " + errorCode + "\n" + errorEmail + "\n" + errorMessage + "\n" + errorCredential);
+    }).then(
+        firebase.database().ref('board/' + req.body.board + '/posts/' + req.body.post + '/replies/').push({
+            content: req.body.content,
+            replies: [],
+            user: firebase.auth().currentUser.email,
+            votes: 1
+        })
+    );
 });
 
 app.listen(port, "localhost")

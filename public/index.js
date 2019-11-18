@@ -37,7 +37,10 @@ $(function () {
         })
             .then(response => response.text())
             .then(result => {
-                document.getElementById('loginNotice').innerText = ("Logged in as: " + JSON.parse(result)["userEmail"])
+                //document.getElementById('loginNotice').innerText = ("Logged in as: " + firebase.auth().currentUser.email)
+                if (JSON.parse(result).tokenReceived === true) {
+                    document.getElementById('loginNotice').innerText = ("Logged in as: " + JSON.parse(result).userEmail);
+                }
                 //console.log(result)
                 //alert("Logged in as: " + JSON.parse(result).userEmail + "!")
             });
@@ -47,12 +50,10 @@ $(function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             console.log("User logged in, running authenticate()");
-            setTimeout(authenticate, 1000);
-
-            //authenticate();
+            authenticate();
         } else {
-            console.log('user not signed (onAuthStateChanged)');
+            console.log('User not logged in, not running authenticate())');
         }
     });
-    
+
 });

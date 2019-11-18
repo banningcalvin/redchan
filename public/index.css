@@ -27,7 +27,7 @@ body
     font-size: 28px;
     font-weight: 700;
     letter-spacing: -2px;
-    margin-top: 0;
+    margin-top: 3em;
     text-align: center;
     clear: both;
     color: #af0a0f;
@@ -97,4 +97,23 @@ display: block;
 }
 .hidden {
     display: none;
+}
+
+#replyBox {
+    height: 140px;
+    width: 280px;
+    background-color: #d6daf0;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin: 10px;
+    border-radius: 2px;
+    padding: 4px;
+    border-style: solid;
+    border-width: 1px;
+}
+
+a:hover {
+    color:red;
+    text-decoration: none;
 }
