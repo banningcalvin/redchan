@@ -118,7 +118,11 @@
 
     <script>
         function vote(path, upvote) {
-            console.log('upvote?' + upvote + ': ' + path)
+            if(upvote) { // user is upvoting bad content because they hate fun
+                console.log("upvote: /board/" + '<%= board %>' + "/posts/" + path)
+            }else { // user is downvoting good content because they hate fun
+                console.log("downvote: /board/" + '<%= board %>' + "/posts/" + path)
+            }
         }
     </script>
 
